@@ -28,67 +28,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<!-- tag::plugin[] -->
-			<plugin>
-				<groupId>io.fabric8</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.19.0</version>
-
-				<configuration>
-					<dockerHost>tcp://192.168.99.100:2376</dockerHost>
-					<certPath>${user.home}/.docker/machine/machines/default</certPath>
-					<useColor>true</useColor>
-
-					<!-- <registry>https://index.docker.io/v1</registry> -->
-					<images>
-						<!-- The docker image configuration -->
-						<image>
-							<name>ns162002/spring-docker-jenkins-pipleine</name>
-							<build>
-								<dockerFileDir>.</dockerFileDir>
-								<tags>
-									<tag>latest</tag>
-									<tag>${project.version}</tag>
-								</tags>								
-								<assembly>
-									<mode>dir</mode>
-									<inline xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
-										<id>${project.artifactId}</id>
-										<files>
-											<file>
-												<source>${project.build.directory}/${project.artifactId}-${project.version}.jar</source>
-												<outputDirectory>./</outputDirectory>
-												<destName>${project.artifactId}-${project.version}.jar</destName>
-											</file>
-										</files>
-									</inline>
-								</assembly>
-							</build>
-						</image>
-					</images>
-				</configuration>
-
-				<!-- Connects start/stop to pre- and post-integration-test phase, 
-				respectively to start docker container during integration tests -->
-				<executions>
-					<execution>
-						<id>start</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<!-- "build" creates the images with the artifact -->
-							<goal>build</goal>
-							<goal>start</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>stop</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>stop</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 
 			<!-- Failsafe plugin is used to ensure test failures result is safe teardown 
 			(ie. stop docker containers) -->
